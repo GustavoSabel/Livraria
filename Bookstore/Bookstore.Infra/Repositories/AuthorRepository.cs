@@ -17,6 +17,7 @@ namespace Bookstore.Infra.Repositories
             var lista = _contexto.Authors
                 .Select(x => new AuthorListQuery()
                 {
+                    Id = x.Id,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Birthdate = x.Birthdate,

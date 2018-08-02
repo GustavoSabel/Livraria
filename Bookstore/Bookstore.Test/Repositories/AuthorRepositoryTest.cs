@@ -39,8 +39,6 @@ namespace Bookstore.Test.Repositories
             var _novoRepository = new AuthorRepository(CriarContexto());
             var authorUpdated = _novoRepository.Update(new Author("EricX", "EvansX", new DateTime(1950, 1, 1)) { Id = authorId });
 
-             _repository.GetAll().Count.ShouldBe(1);
-
             authorUpdated = _repository.Get(authorUpdated.Id);
             authorUpdated.FirstName.ShouldBe("EricX");
             authorUpdated.LastName.ShouldBe("EvansX");

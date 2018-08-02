@@ -14,10 +14,11 @@ namespace Bookstore.Infra.Repositories
             _contexto = contexto;
         }
 
-        public T Get(Guid id)
+        public virtual T Get(Guid id)
         {
-            return _contexto.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id);
-            //return _contexto.Query<T>().FirstOrDefault(x => x.Id == id);
+            return _contexto
+                .Set<T>()
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public T Insert(T entity)

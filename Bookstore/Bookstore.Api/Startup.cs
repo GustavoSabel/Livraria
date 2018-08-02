@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Bookstore.Domain.Handlers;
+using Bookstore.Domain.Repositories;
+using Bookstore.Infra;
+using Bookstore.Infra.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Bookstore.Api
 {
     public class Startup
     {
+        private const string CONNECTION_STRING = @"Server=(localdb)\mssqllocaldb;Database=Bookstore;Trusted_Connection=True;";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,10 +26,15 @@ namespace Bookstore.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<BookstoreContext>(options => options.UseSqlServer(CONNECTION_STRING));
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<BookHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, BookstoreContext context)
         {
             if (env.IsDevelopment())
             {
@@ -36,6 +42,8 @@ namespace Bookstore.Api
             }
 
             app.UseMvc();
+            
+            context.ExecuteMigrations();
         }
     }
 }
