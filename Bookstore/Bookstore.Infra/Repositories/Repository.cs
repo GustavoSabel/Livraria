@@ -1,52 +1,46 @@
 ﻿using Bookstore.Domain.Base;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Bookstore.Infra.Repositories
 {
     public class Repository<T> : IRepository<T> where T : Entity
     {
+        protected BookstoreContext _contexto;
+
+        public Repository(BookstoreContext contexto)
+        {
+            _contexto = contexto;
+        }
+
         public T Get(Guid id)
         {
-            using (var db = new BookstoreContext())
-            {
-                return db.Set<T>().FirstOrDefault(x => x.Id == id);
-                //return db.Query<T>().FirstOrDefault(x => x.Id == id);
-            }
+            return _contexto.Set<T>().AsNoTracking().FirstOrDefault(x => x.Id == id);
+            //return _contexto.Query<T>().FirstOrDefault(x => x.Id == id);
         }
 
         public T Insert(T entity)
         {
-            using (var db = new BookstoreContext())
-            {
-                db.Set<T>().Add(entity);
-                db.SaveChanges();
-                return entity;
-            }
+            _contexto.Set<T>().Add(entity);
+            _contexto.SaveChanges();
+            return entity;
         }
 
         public T Update(T entity)
         {
-            using (var db = new BookstoreContext())
-            {
-                var entryEntity = db.Entry(entity);
-                entryEntity.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                db.SaveChanges();
+            var entryEntity = _contexto.Set<T>().Attach(entity);
+            entryEntity.State = EntityState.Modified;
+            _contexto.SaveChanges();
 
-                return entity;
-            }
+            return entity;
         }
 
         public void Delete(Guid id)
         {
-            using (var db = new BookstoreContext())
-            {
-                var entity = db.Set<T>().FirstOrDefault(x => x.Id == id);
-                db.Remove(entity);
-                db.SaveChanges();
-            }
+            var entity = _contexto.Set<T>().FirstOrDefault(x => x.Id == id);
+            _contexto.Remove(entity);
+            _contexto.SaveChanges();
         }
     }
 }

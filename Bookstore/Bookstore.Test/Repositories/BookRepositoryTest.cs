@@ -16,8 +16,8 @@ namespace Bookstore.Test.Repositories
 
         public BookRepositoryTest()
         {
-            _authorRepository = new AuthorRepository();
-            _bookRepository = new BookRepository();
+            _authorRepository = new AuthorRepository(_contexto);
+            _bookRepository = new BookRepository(_contexto);
 
             _authorDouglasAdams = _authorRepository.Insert(new Author("Douglas", "Adams", null));
         }
@@ -37,8 +37,8 @@ namespace Bookstore.Test.Repositories
         public void Update()
         {
             var book = _bookRepository.Insert(new Book("Guia do mochileiro das galaxias", null, _authorDouglasAdams.Id));
-
-            _bookRepository.Update(new Book("The Hitchhiker's Guide to the Galaxy", "Alguma coisa", _authorDouglasAdams.Id) { Id = book.Id });
+            
+            book = new BookRepository(CriarContexto()).Update(new Book("The Hitchhiker's Guide to the Galaxy", "Alguma coisa", _authorDouglasAdams.Id) { Id = book.Id } );
 
             book = _bookRepository.Get(book.Id);
             book.Title.ShouldBe("The Hitchhiker's Guide to the Galaxy");

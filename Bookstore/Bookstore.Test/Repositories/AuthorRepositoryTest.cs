@@ -14,7 +14,7 @@ namespace Bookstore.Test.Repositories
 
         public AuthoRepositoryTest()
         {
-            _repository = new AuthorRepository();
+            _repository = new AuthorRepository(_contexto);
             //new BookstoreContext().Database.EnsureDeleted();
             
         }
@@ -34,16 +34,17 @@ namespace Bookstore.Test.Repositories
         [Fact]
         public void Update()
         {
-            var author = new Author("Eric", "Evans", new DateTime(1945, 7, 2));
-            _repository.Insert(author);
+            var authorId = _repository.Insert(new Author("Eric", "Evans", new DateTime(1945, 7, 2))).Id;
 
-            author = new Author("EricX", "EvansX", new DateTime(1950, 1, 1)) { Id = author.Id };
-            _repository.Update(author);
+            var _novoRepository = new AuthorRepository(CriarContexto());
+            var authorUpdated = _novoRepository.Update(new Author("EricX", "EvansX", new DateTime(1950, 1, 1)) { Id = authorId });
 
-            author = _repository.Get(author.Id);
-            author.FirstName.ShouldBe("EricX");
-            author.LastName.ShouldBe("EvansX");
-            author.Birthdate.ShouldBe(new DateTime(1950, 1, 1));
+             _repository.GetAll().Count.ShouldBe(1);
+
+            authorUpdated = _repository.Get(authorUpdated.Id);
+            authorUpdated.FirstName.ShouldBe("EricX");
+            authorUpdated.LastName.ShouldBe("EvansX");
+            authorUpdated.Birthdate.ShouldBe(new DateTime(1950, 1, 1));
         }
 
         [Fact]

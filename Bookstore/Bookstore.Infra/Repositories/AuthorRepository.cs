@@ -8,20 +8,21 @@ namespace Bookstore.Infra.Repositories
 {
     public class AuthorRepository : Repository<Author>, IAuthorRepository
     {
+        public AuthorRepository(BookstoreContext contexto) : base(contexto)
+        {
+        }
+
         public IReadOnlyList<AuthorListQuery> GetAll()
         {
-            using (var db = new BookstoreContext())
-            {
-                var lista = db.Authors
-                    .Select(x => new AuthorListQuery()
-                    {
-                        FirstName = x.FirstName,
-                        LastName = x.LastName,
-                        Birthdate = x.Birthdate,
-                    })
-                    .ToList();
-                return lista;
-            }
+            var lista = _contexto.Authors
+                .Select(x => new AuthorListQuery()
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Birthdate = x.Birthdate,
+                })
+                .ToList();
+            return lista;
         }
     }
 }

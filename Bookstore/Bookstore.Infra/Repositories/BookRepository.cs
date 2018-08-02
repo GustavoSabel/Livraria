@@ -9,21 +9,23 @@ namespace Bookstore.Infra.Repositories
 {
     public class BookRepository : Repository<Book>, IBookRepository
     {
+        public BookRepository(BookstoreContext contexto) : base(contexto)
+        {
+        }
+
         public IReadOnlyList<BookListQuery> GetAll()
         {
-            using (var db = new BookstoreContext())
-            {
-                var lista = db.Books
-                    .Include(x => x.Author)
-                    .Select(x => new BookListQuery()
-                    {
-                        Title = x.Title,
-                        AuthorId = x.Id,
-                        AuthorName = x.Author.FullName
-                    })
-                    .ToList();
-                return lista;
-            }
+            var lista = _contexto.Books
+                .Include(x => x.Author)
+                .AsNoTracking()
+                .Select(x => new BookListQuery()
+                {
+                    Title = x.Title,
+                    AuthorId = x.AuthorId,
+                    AuthorName = x.Author.FullName
+                })
+                .ToList();
+            return lista;
         }
     }
 }
