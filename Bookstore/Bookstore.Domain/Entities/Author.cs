@@ -1,5 +1,7 @@
 ﻿using Bookstore.Domain.Base;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bookstore.Domain.Entities
 {
@@ -12,9 +14,17 @@ namespace Bookstore.Domain.Entities
             Birthdate = birthdate;
         }
 
+        [Required]
+        [MaxLength(100)]
         public string FirstName { get; private set; }
+
+        [Required]
+        [MaxLength(100)]
         public string LastName { get; private set; }
+        
+        [NotMapped]
         public string FullName => FirstName + " " + LastName;
+
         public DateTime? Birthdate { get; private set; }
     }
 }

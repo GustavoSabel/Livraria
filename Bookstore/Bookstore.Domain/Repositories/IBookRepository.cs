@@ -7,7 +7,6 @@ namespace Bookstore.Domain.Repositories
 {
     public interface IBookRepository : IRepository<Book>
     {
-
         IReadOnlyList<BookListQuery> GetAll();
     }
 }
