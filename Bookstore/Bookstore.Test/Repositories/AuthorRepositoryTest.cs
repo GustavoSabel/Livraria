@@ -52,6 +52,8 @@ namespace Bookstore.Test.Repositories
         {
             var author = new Author("Eric", "Evans", new DateTime(1945, 7, 2));
             _repository.Insert(author);
+
+            _repository = new AuthorRepository(CriarContexto());
             _repository.Delete(author.Id);
             _repository.Get(author.Id).ShouldBeNull();
         }

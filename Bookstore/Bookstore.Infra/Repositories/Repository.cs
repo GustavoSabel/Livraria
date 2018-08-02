@@ -36,10 +36,16 @@ namespace Bookstore.Infra.Repositories
             return entity;
         }
 
+        public void Delete(T entity)
+        {
+            _contexto.Set<T>().Remove(entity);
+            _contexto.SaveChanges();
+        }
+
         public void Delete(Guid id)
         {
             var entity = _contexto.Set<T>().FirstOrDefault(x => x.Id == id);
-            _contexto.Remove(entity);
+            _contexto.Set<T>().Remove(entity);
             _contexto.SaveChanges();
         }
     }

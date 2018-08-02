@@ -57,5 +57,16 @@ namespace Bookstore.Test.Repositories
             books[0].AuthorId.ShouldBe(_authorDouglasAdams.Id);
             books[0].AuthorName.ShouldBe(_authorDouglasAdams.FullName);
         }
+
+        [Fact]
+        public void Delete()
+        {
+            var book = _bookRepository.Insert(new Book("Guia do mochileiro das galaxias", "", _authorDouglasAdams.Id));
+
+            _bookRepository = new BookRepository(CriarContexto());
+            _bookRepository.Delete(book.Id);
+
+            _bookRepository.Get(book.Id).ShouldBeNull();
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace Bookstore.Infra
         {
             //optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Bookstore;Trusted_Connection=True;");
             //base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         public BookstoreContext(DbContextOptions<BookstoreContext> options) : base(options) { }
