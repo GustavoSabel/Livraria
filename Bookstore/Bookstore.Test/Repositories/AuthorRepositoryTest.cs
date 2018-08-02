@@ -4,6 +4,7 @@ using Bookstore.Infra;
 using Bookstore.Infra.Repositories;
 using Shouldly;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Bookstore.Test.Repositories
@@ -59,14 +60,16 @@ namespace Bookstore.Test.Repositories
         [Fact]
         public void GetAll()
         {
-            _repository.Insert(new Author("Gustavo", "Sabel", new DateTime(1991, 09, 23)));
+            var author = _repository.Insert(new Author("Gustavo", "Sabel", new DateTime(1991, 09, 23)));
 
             var authors = _repository.GetAll();
-            authors.Count.ShouldBe(1);
-            authors[0].FirstName.ShouldBe("Gustavo");
-            authors[0].LastName.ShouldBe("Sabel");
-            authors[0].FullName.ShouldBe("Gustavo Sabel");
-            authors[0].Birthdate.ShouldBe(new DateTime(1991, 09, 23));
+            authors.Count.ShouldBeGreaterThan(1);
+
+            var authorListaQuery = authors.First(x => x.Id == author.Id);
+            authorListaQuery.FirstName.ShouldBe("Gustavo");
+            authorListaQuery.LastName.ShouldBe("Sabel");
+            authorListaQuery.FullName.ShouldBe("Gustavo Sabel");
+            authorListaQuery.Birthdate.ShouldBe(new DateTime(1991, 09, 23));
         }
     }
 }

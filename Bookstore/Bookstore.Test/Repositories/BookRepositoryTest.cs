@@ -2,6 +2,7 @@
 using Bookstore.Domain.Repositories;
 using Bookstore.Infra.Repositories;
 using Shouldly;
+using System.Linq;
 using Xunit;
 
 namespace Bookstore.Test.Repositories
@@ -52,10 +53,12 @@ namespace Bookstore.Test.Repositories
             var book = _bookRepository.Insert(new Book("Guia do mochileiro das galaxias", "", _authorDouglasAdams.Id));
 
             var books = _bookRepository.GetAll();
-            books.Count.ShouldBe(1);
-            books[0].Title.ShouldBe("Guia do mochileiro das galaxias");
-            books[0].AuthorId.ShouldBe(_authorDouglasAdams.Id);
-            books[0].AuthorName.ShouldBe(_authorDouglasAdams.FullName);
+            books.Count.ShouldBeGreaterThan(1);
+
+            var bookQuery = books.Single(x => x.Id == book.Id);
+            bookQuery.Title.ShouldBe("Guia do mochileiro das galaxias");
+            bookQuery.AuthorId.ShouldBe(_authorDouglasAdams.Id);
+            bookQuery.AuthorName.ShouldBe(_authorDouglasAdams.FullName);
         }
 
         [Fact]
