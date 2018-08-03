@@ -6,30 +6,43 @@ import Book from "../Model/Book";
 import Modal from "src/Components/Modal";
 
 interface IState {
-  title: string;
-  synopsis: string;
   authorId: string;
   authors: AuthorList[];
+  title: string;
+  synopsis: string;
 }
 
 interface IProps {
+  bookId: string;
   handleSaved(book: Book): void;
   handleCloseClick(): void;
 }
 
-class NewBook extends React.Component<IProps, IState> {
+export default class BookEditor extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
       authorId: "",
       authors: [],
       synopsis: "",
-      title: "",
+      title: ""
     };
   }
 
   public async componentWillMount() {
-    this.setState({ authors: await AuthorService.GetAll() });
+    let book : Book;
+    if (this.props.bookId) {
+      book = await BookService.Get(this.props.bookId);
+    } else {
+      book = new Book();
+    }
+
+    this.setState({
+      authorId: book.authorId,
+      authors: await AuthorService.GetAll(),
+      synopsis: book.synopsis,
+      title: book.title
+    });
   }
 
   public render() {
@@ -53,7 +66,9 @@ class NewBook extends React.Component<IProps, IState> {
           onChange={e => this.setState({ authorId: e.target.value })}
         >
           {this.state.authors.map(x => (
-            <option key={x.id} value={x.id}>{x.fullName}</option>
+            <option key={x.id} value={x.id}>
+              {x.fullName}
+            </option>
           ))}
         </select>
       </Modal>
@@ -61,13 +76,22 @@ class NewBook extends React.Component<IProps, IState> {
   }
 
   private async confirm(): Promise<void> {
-    const result = await BookService.Post({
-      authorId: this.state.authorId,
-      synopsis: this.state.synopsis,
-      title: this.state.title
-    });
+    let result: Book;
+    if (this.props.bookId) {
+      result = await BookService.Put({
+        authorId: this.state.authorId,
+        id: this.props.bookId,
+        synopsis: this.state.synopsis,
+        title: this.state.title
+      });
+    } else {
+      result = await BookService.Post({
+        authorId: this.state.authorId,
+        synopsis: this.state.synopsis,
+        title: this.state.title
+      });
+    }
+
     this.props.handleSaved(result);
   }
 }
-
-export default NewBook;

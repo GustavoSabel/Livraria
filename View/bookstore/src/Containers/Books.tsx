@@ -1,19 +1,22 @@
 import * as React from "react";
 import BookList from "../Model/BookList";
 import BookService from "../Services/BookService";
-import NewBook from "./NewBook";
+import BookEditor from "./BookEditor";
 
 interface IState {
+  bookEditId: string;
   books: BookList[];
-  newBook: boolean;
+  openBookEditor: boolean;
 }
 
 class Books extends React.Component<any, IState> {
+
   constructor(props: any) {
     super(props);
     this.state = {
+      bookEditId: '',
       books: [],
-      newBook: false
+      openBookEditor: false,
     };
   }
     
@@ -27,8 +30,9 @@ class Books extends React.Component<any, IState> {
         <table>
           <thead>
             <tr>
-              <td>Title</td>
-              <td>Author</td>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Commands</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +41,10 @@ class Books extends React.Component<any, IState> {
                 <tr key={x.id}>
                   <td>{x.title}</td>
                   <td>{x.authorName}</td>
+                  <dt>
+                    <button onClick={() => this.editBookClick(x.id)} name="editBook">Edit</button>
+                    <button onClick={() => this.deleteBookClick(x.id)} name="deleteBook">Delete</button>
+                  </dt>
                 </tr>
               );
             })}
@@ -46,8 +54,9 @@ class Books extends React.Component<any, IState> {
           New Book
         </button>
 
-        {this.state.newBook && (
-          <NewBook
+        {this.state.openBookEditor && (
+          <BookEditor
+            bookId={this.state.bookEditId}
             handleSaved={() => this.handleSavedNewBook()}
             handleCloseClick={() => this.handleCloseClickNewBook()}
           />
@@ -57,16 +66,25 @@ class Books extends React.Component<any, IState> {
   }
 
   private handleCloseClickNewBook() {
-    this.setState({ newBook: false });
+    this.setState({ openBookEditor: false });
   }
 
   private async handleSavedNewBook() {
-    this.setState({ newBook: false });
+    this.setState({ openBookEditor: false });
     await this.RefreshBooks();
   }
 
+  private async deleteBookClick(id: string) {
+    await BookService.Delete(id);
+    this.RefreshBooks(); 
+  }
+
+  private editBookClick(id: string) {
+    this.setState({ openBookEditor: true, bookEditId: id });
+  }
+
   private newBookClick() {
-    this.setState({ newBook: true });
+    this.setState({ openBookEditor: true, bookEditId: '' });
   }
 
   private async RefreshBooks() {

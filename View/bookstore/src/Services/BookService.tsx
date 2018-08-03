@@ -16,6 +16,9 @@ const BookService = {
     },
     async Put(book: UpdateBookCommand) : Promise<Book> {
         return (await MyAxios.put<Book>(`book`, book)).data;
+    },
+    async Delete(id: string) : Promise<Book> {
+        return (await MyAxios.delete(`book/${id}`)).data;
     }
 } 
 

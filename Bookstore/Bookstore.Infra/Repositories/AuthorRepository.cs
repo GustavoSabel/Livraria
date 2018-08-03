@@ -15,6 +15,7 @@ namespace Bookstore.Infra.Repositories
         public IReadOnlyList<AuthorListQuery> GetAll()
         {
             var lista = _contexto.Authors
+                .OrderBy(x => x.FirstName)
                 .Select(x => new AuthorListQuery()
                 {
                     Id = x.Id,

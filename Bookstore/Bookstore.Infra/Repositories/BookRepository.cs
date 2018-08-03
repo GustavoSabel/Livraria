@@ -25,7 +25,7 @@ namespace Bookstore.Infra.Repositories
         {
             var lista = _contexto.Books
                 .Include(x => x.Author)
-                .AsNoTracking()
+                .OrderBy(x => x.Title)
                 .Select(x => new BookListQuery()
                 {
                     Id = x.Id,

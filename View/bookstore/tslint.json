@@ -7,6 +7,7 @@
     ]
   },
   "rules": {
+    "no-debugger": false,
     "jsx-no-lambda": false,
     "no-console": false,
     "comment-format": false,

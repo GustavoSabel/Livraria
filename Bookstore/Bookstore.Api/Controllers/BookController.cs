@@ -41,9 +41,15 @@ namespace Bookstore.Api.Controllers
         }
 
         [HttpPut()]
-        public Book Put(InsertBookCommand command)
+        public Book Put(UpdateBookCommand command)
         {
-            return _handler.Insert(command);
+            return _handler.Update(command);
+        }
+
+        [HttpDelete("{id}")]
+        public void Delete(Guid id)
+        {
+            _handler.Delete(id);
         }
     }
 }
