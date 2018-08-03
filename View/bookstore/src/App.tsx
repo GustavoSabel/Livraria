@@ -1,9 +1,13 @@
 import * as React from 'react';
-import Book from './Containers/Books';
+import Books from './Containers/Books';
 
 class App extends React.Component {
   public render() {
-    return <Book/>;
+  return (
+    <div>
+        <Books/>
+    </div>
+    );
   }
 }
 

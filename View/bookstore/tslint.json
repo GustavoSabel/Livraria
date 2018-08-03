@@ -5,5 +5,12 @@
       "config/**/*.js",
       "node_modules/**/*.ts"
     ]
+  },
+  "rules": {
+    "jsx-no-lambda": false,
+    "no-console": false,
+    "comment-format": false,
+    "curly": false,
+    "ordered-imports": false
   }
 }

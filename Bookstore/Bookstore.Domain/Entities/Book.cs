@@ -20,6 +20,12 @@ namespace Bookstore.Domain.Entities
 
         public Book(string title, string synopsis, Guid authorId)
         {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new Exception("Título é um campo obrigatório");
+
+            if (authorId == Guid.Empty)
+                throw new Exception("Autor é um campo obrigatório");
+
             Title = title;
             Synopsis = synopsis;
             AuthorId = authorId;
