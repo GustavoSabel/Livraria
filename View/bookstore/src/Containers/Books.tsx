@@ -41,10 +41,10 @@ class Books extends React.Component<any, IState> {
                 <tr key={x.id}>
                   <td>{x.title}</td>
                   <td>{x.authorName}</td>
-                  <dt>
+                  <td>
                     <button onClick={() => this.editBookClick(x.id)} name="editBook">Edit</button>
                     <button onClick={() => this.deleteBookClick(x.id)} name="deleteBook">Delete</button>
-                  </dt>
+                  </td>
                 </tr>
               );
             })}
