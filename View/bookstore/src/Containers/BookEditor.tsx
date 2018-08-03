@@ -59,13 +59,16 @@ export default class BookEditor extends React.Component<IProps, IState> {
           onChange={e => this.setState({ title: e.target.value })}
         />
 
+        <label htmlFor="title">Author</label>
         <select
           name="author"
           id="author"
           value={this.state.authorId || ""}
           onChange={e => this.setState({ authorId: e.target.value })}
         >
+          <option value=""/>
           {this.state.authors.map(x => (
+
             <option key={x.id} value={x.id}>
               {x.fullName}
             </option>
